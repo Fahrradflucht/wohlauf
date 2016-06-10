@@ -8,9 +8,13 @@
   },
   "scripts": {
     "start": "nodemon ./bin/www",
+    "create:db:test": "psql postgresql://wohlauf:mysecretpassword@localhost:65432/postgres -f $(pwd)/db/create_test_db.sql",
+    "pretest": "npm run create:db:test && knex migrate:latest --knexfile db/config.js --env test",
+    "test": "NODE_ENV=test mocha test/*/*",
     "heroku-postbuild": "knex migrate:latest --knexfile db/config.js"
   },
   "dependencies": {
+    "axios": "^0.12.0",
     "body-parser": "^1.15.1",
     "debug": "^2.2.0",
     "ejs": "^2.4.2",
@@ -18,5 +22,11 @@
     "knex": "^0.11.5",
     "morgan": "^1.7.0",
     "pg": "^5.0.0"
+  },
+  "devDependencies": {
+    "mocha": "^2.5.3",
+    "should": "^9.0.2",
+    "supertest": "^1.2.0",
+    "supertest-as-promised": "^3.1.0"
   }
 }

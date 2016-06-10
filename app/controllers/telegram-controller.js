@@ -1,11 +1,12 @@
 'use strict';
 
+const axios = require('axios');
 const express = require('express');
 const knex = require('../../db');
 const router = express.Router();
 
 router.post('/203383619:AAHVwE_kbaBRNM8AxyiE5_DxlaPZ-yHpNnI', (req, res) => {
-  console.log(JSON.stringify(req.body, null, 2));
+  // console.log(JSON.stringify(req.body, null, 2));
   handleMessages(req, res, (req, res) => {
     res.status(200).json({ ok: true });
   });
