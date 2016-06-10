@@ -45,21 +45,38 @@ const handleBotCommands = (req, res, next) => {
     const command = message.text.slice(element.offset, element.offset + element.length);
     switch (command) {
       case '/start':
-        createUser(message.from, message.chat.id);
+        createUser(message.from, message.chat.id)
+          .then((registered) => {
+            if (registered) {
+              respondWithWelcomeMsg(req, res);
+            } else {
+              next(req, res);
+            }
+          });
         break;
       default:
         console.log("Unhandled command:", command);
+        next(req, res);
     }
   });
-  next(req, res);
 };
 
+const respondWithWelcomeMsg = (req, res) => {
+  const message = req.body.message;
+  res.status(200).json({
+    method: "sendMessage",
+    chat_id: message.chat.id,
+    reqly_to_message_id: message.message_id,
+    text: "Nice! Du hast dich erfolgreich registriert!"
+  });
+}
+
 const createUser = (user, chat_id) => {
-  knex('users')
+  return knex('users')
     .where({telegram_id: user.id})
     .then((users) => {
       if(users.length === 0) {
-        knex('users')
+        return knex('users')
           .insert([{
             'telegram_id': user['id'],
             'chat_id': chat_id,
@@ -68,11 +85,12 @@ const createUser = (user, chat_id) => {
             'username': user['username']
           }], 'id')
           .then((id) => {
-            return
+            return true;
           })
+      } else {
+        return false;
       }
     });
 }
 
 module.exports = router;
-
