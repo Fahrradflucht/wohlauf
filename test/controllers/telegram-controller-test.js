@@ -76,6 +76,7 @@ describe("Telegram controller", () => {
           res.body.ok.should.be.true;
         })
     });
+    it('does not react to already received updates');
   });
   describe("commands", () => {
     describe("/start", () => {
