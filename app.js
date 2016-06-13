@@ -34,8 +34,8 @@ if (app.get('env') === 'development') {
   app.use((err, req, res, next) => {
     res.status(err.status || 500);
     res.render('_error', {
-      message: err.message,
-      error: err
+      message: 'Not Found',
+      error: {}
     });
   });
 }
